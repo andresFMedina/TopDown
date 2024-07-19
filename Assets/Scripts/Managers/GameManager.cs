@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
 
     public Transform player;
     public GameObject enemy;
+    public Transform squareEnemies;
 
     private void Awake()
     {
@@ -34,7 +35,8 @@ public class GameManager : MonoBehaviour
             float xPosition = Random.Range(51, 1000);
             float yPosition = Random.Range(51, 1000);
             Vector3 position = new(xPosition, yPosition);
-            Instantiate(enemy, position, Quaternion.identity);
+            var go = Instantiate(enemy, position, Quaternion.identity);
+            go.transform.parent = squareEnemies;
         }
     }
 }
