@@ -5,8 +5,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public Transform player;
-    public GameObject enemy;
-    public Transform squareEnemies;
+    public Rect levelBounds;
+    public GameObject bgPrefab;
+    public Transform background;
 
     private void Awake()
     {
@@ -23,20 +24,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        SpawnEnemies();
-    }
-
-    private void SpawnEnemies()
-    {
-
-        for (int i = 0; i < 100; i++)
+        player = GameObject.FindGameObjectWithTag("Player").transform;        
+        for (int y = 0; y <= levelBounds.height; y+=100)
         {
-            float xPosition = Random.Range(51, 1000);
-            float yPosition = Random.Range(51, 1000);
-            Vector3 position = new(xPosition, yPosition);
-            var go = Instantiate(enemy, position, Quaternion.identity);
-            go.transform.parent = squareEnemies;
+            for (int x = 0; x <= levelBounds.width; x+=100)
+            {
+                var go = Instantiate(bgPrefab, new Vector3(x,y), Quaternion.identity);
+                go.transform.parent = background;
+            }
         }
     }
 }
