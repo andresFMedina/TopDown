@@ -4,10 +4,8 @@ public class EnemyMovement : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed = 1.5f;
-    //[SerializeField]
-    //private float minChaseDistance = 50f;
-
     Rigidbody2D rb;
+    private Vector2 moveDirection = Vector2.zero;
 
     void Start()
     {
@@ -17,20 +15,11 @@ public class EnemyMovement : MonoBehaviour
     private void FixedUpdate()
     {
         ChasePlayer();
-        //float distance = Vector2.Distance(transform.position, GameManager.Instance.player.position);
-        //if (distance < minChaseDistance)
-        //{
-        //}
     }
 
     private void ChasePlayer()
     {
-        Vector2 direction = (GameManager.Instance.player.position - transform.position).normalized;
-        rb.MovePosition(rb.position + direction * moveSpeed * Time.fixedDeltaTime);
-    }
-
-    public void StopMovement()
-    {
-        rb.velocity = Vector2.zero;
+        moveDirection = (GameManager.Instance.player.position - transform.position).normalized;
+        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
     }
 }

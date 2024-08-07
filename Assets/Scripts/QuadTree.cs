@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class QuadTree
 {
     private int maxObjects = 10;
-    private int maxLevels = 3;
+    private int maxLevels = 5;
 
     private int level;
     private List<Transform> objects;
@@ -79,6 +81,47 @@ public class QuadTree
         }
 
         return index;
+    }
+
+    public async Task InsertAsync(Transform obj)
+    {
+        if (nodes[0] != null)
+        {
+            int index = GetIndex(new Rect(obj.position.x, obj.position.y, 0, 0));
+
+            if (index != -1)
+            {
+                await nodes[index].InsertAsync(obj);
+                return;
+            }
+        }
+
+        objects.Add(obj);
+
+        if (objects.Count > maxObjects && level < maxLevels)
+        {
+            if (nodes[0] == null)
+            {
+                Split();
+            }
+
+            
+
+            int i = 0;
+            while (i < objects.Count)
+            {
+                int index = GetIndex(new Rect(objects[i].position.x, objects[i].position.y, 0, 0));
+                if (index != -1)
+                {
+                    nodes[index].Insert(objects[i]);
+                    objects.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
     }
 
     public void Insert(Transform obj)
