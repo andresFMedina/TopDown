@@ -6,7 +6,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     private Transform squareEnemies;
     [SerializeField] private AIManager aiManager;
-    [SerializeField] private float updateTreeInterval = 0.5f;
     [SerializeField] private int enemyQuantity = 1000;    
 
     private void Start()

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AIManager : MonoBehaviour
@@ -7,6 +9,8 @@ public class AIManager : MonoBehaviour
     private PlayerMovement player;
     public List<Transform> enemies;
     public List<string> nearEnemies = new();
+    [SerializeField] private float updateTreeInterval = 1f;
+    private float nextUpdateTreeInterval;
 
     void Awake()
     {
@@ -40,9 +44,19 @@ public class AIManager : MonoBehaviour
             }
         }
 
-        UpdateEnemies();
-        UpdateQuadTree();
+        if (Time.time > nextUpdateTreeInterval)
+        {
+            //UpdateTree();
+            UpdateEnemies();
+            UpdateQuadTree();
+            nextUpdateTreeInterval = Time.time + updateTreeInterval;
+        }
 
+    }
+
+    private void UpdateTree()
+    {
+        Task.WaitAll(UpdateEnemiesAsync(), UpdateQuadTreeAsync());
     }
 
     void UpdateEnemies()
@@ -67,6 +81,31 @@ public class AIManager : MonoBehaviour
         foreach (Transform enemy in enemies)
         {
             quadTree.Insert(enemy);
+        }
+    }
+
+    async Task UpdateEnemiesAsync()
+    {
+        List<Transform> nearbyEnemies = new List<Transform>();
+        var player = GameManager.Instance.player;
+        nearbyEnemies = await Task.Run(() => quadTree.Retrieve(nearbyEnemies, new Rect(player.position.x, player.position.y, 0, 0)));
+
+        foreach (Transform enemy in enemies)
+        {
+            EnemyMovement enemyScript = enemy.GetComponent<EnemyMovement>();
+            if (enemyScript == null || nearEnemies.Contains(enemy.name)) continue;
+
+            enemyScript.enabled = nearbyEnemies.Contains(enemy);
+        }
+    }
+
+    async Task UpdateQuadTreeAsync()
+    {
+        quadTree.Clear();
+
+        foreach (Transform enemy in enemies)
+        {
+            await Task.Run(() => quadTree.Insert(enemy));
         }
     }
 }
