@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -30,11 +31,11 @@ public class PlayerMovement : MonoBehaviour
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    public Collider2D[] GetNearEnemies()
+    public IEnumerable<Transform> GetNearEnemies()
     {
         var enemies = Physics2D.OverlapCircleAll(transform.position, circleRaycastRadius, LayerMask.GetMask("Enemy"));
         print(enemies.Length);
-        return enemies;
+        return enemies.Select(e => e.transform);
     }
 
     private void OnDrawGizmos()

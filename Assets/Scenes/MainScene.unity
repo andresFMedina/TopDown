@@ -525,7 +525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3612681183500626412, guid: 203f59b2f25616341a2ad24f993604b4, type: 3}
   aiManager: {fileID: 884794191}
-  enemyQuantity: 1000
+  enemyQuantity: 5000
 --- !u!4 &871477238
 Transform:
   m_ObjectHideFlags: 0
@@ -585,9 +585,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc0d94cac5c9144c8ed80136549ef32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies: []
-  nearEnemies: []
   updateTreeInterval: 1
+  maxRangeEnemiesUpdate: 200
 --- !u!1 &2089204740
 GameObject:
   m_ObjectHideFlags: 0
